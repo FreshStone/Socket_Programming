@@ -1,3 +1,4 @@
+//based on the blog "https://www.thepolyglotdeveloper.com/2017/05/network-sockets-with-the-go-programming-language/"
 package main
 
 import (
@@ -14,6 +15,21 @@ type ClientManager struct {
     broadcast  chan []byte
     register chan *net.Conn
     unregister chan *net.Conn
+}
+
+func main() {
+    if len(os.Args) != 2{
+            fmt.Printf("Usage: %s 'mode'\nmode: client or server\n", os.Args[0])
+            os.Exit(1)
+    }
+    if os.Args[1] == "server" {
+        StartServer()
+    } else if os.Args[1] == "client" {
+        StartClient()
+    }else {
+            fmt.Println("Incorrect Usage")
+            os.Exit(1)
+    }
 }
 
 func (manager *ClientManager) start() {
@@ -93,21 +109,6 @@ func StartClient() {
         reader := bufio.NewReader(os.Stdin)
         message, _ := reader.ReadString('\n')
 	connection.Write([]byte(strings.TrimRight(message, "\n")))
-    }
-}
-
-func main() {
-    if len(os.Args) != 2{
-	    fmt.Printf("Usage: %s 'mode'\nmode: client or server\n", os.Args[0])
-	    os.Exit(1)
-    }
-    if strings.ToLower(os.Args[1]) == "server" {
-        StartServer()
-    } else if strings.ToLower(os.Args[1]) == "client" {
-        StartClient()
-    }else {
-	    fmt.Println("Incorrect Usage")
-	    os.Exit(1)
     }
 }
 
