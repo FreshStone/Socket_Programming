@@ -19,7 +19,7 @@ type ClientManager struct {
 
 func main() {
     if len(os.Args) != 2{
-            fmt.Printf("Usage: %s 'mode'\nmode: client or server\n", os.Args[0])
+            fmt.Printf("Usage: %s 'mode'\nmode: client/server\n", os.Args[0])
             os.Exit(1)
     }
     if os.Args[1] == "server" {
