@@ -2,11 +2,8 @@
 package main
 
 import (
-    "bufio"
     "fmt"
     "net"
-    "os"
-    "strings"
 )
 
 
@@ -18,18 +15,7 @@ type ClientManager struct {
 }
 
 func main() {
-    if len(os.Args) != 2{
-            fmt.Printf("Usage: %s 'mode'\nmode: client/server\n", os.Args[0])
-            os.Exit(1)
-    }
-    if os.Args[1] == "server" {
-        StartServer()
-    } else if os.Args[1] == "client" {
-        StartClient()
-    }else {
-            fmt.Println("Incorrect Usage")
-            os.Exit(1)
-    }
+  StartServer()
 }
 
 func (manager *ClientManager) start() {
@@ -58,25 +44,21 @@ func (manager *ClientManager) start() {
 func receive(conn *net.Conn, manager *ClientManager){
         for{
                 message := make([]byte, 4096)
-		length, err := (*conn).Read(message)
+		            length, err := (*conn).Read(message)
                 if err != nil{
-                        if manager != nil{
-                                manager.unregister <- conn
-                        }
-			(*conn).Close()
-			break
+                        manager.unregister <- conn
+			                  (*conn).Close()
+			                   break
                 }
                 if length > 0 {
                         fmt.Println("RECEIVED:" + string(message))
-                        if manager != nil{
-                                manager.broadcast <- message
-                        }
+                        manager.broadcast <- message
                 }
         }
 }
 
 func StartServer() {
-    fmt.Println("Starting server...")
+    fmt.Println("Starting server...listening on port 1200")
     listener, error := net.Listen("tcp", ":1200")
     if error != nil {
         fmt.Println(error)
@@ -97,18 +79,3 @@ func StartServer() {
 	go receive(&connection, &manager)
     }
 }
-
-func StartClient() {
-    fmt.Println("Starting client...")
-    connection, error := net.Dial("tcp", "localhost:1200")
-    if error != nil {
-        fmt.Println(error)
-    }
-    go receive(&connection, nil)
-    for {
-        reader := bufio.NewReader(os.Stdin)
-        message, _ := reader.ReadString('\n')
-	connection.Write([]byte(strings.TrimRight(message, "\n")))
-    }
-}
-
