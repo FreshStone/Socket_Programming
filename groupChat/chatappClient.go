@@ -1,4 +1,3 @@
-//based on the blog "https://www.thepolyglotdeveloper.com/2017/05/network-sockets-with-the-go-programming-language/"
 package main
 
 import (

@@ -1,4 +1,3 @@
-//based on the blog "https://www.thepolyglotdeveloper.com/2017/05/network-sockets-with-the-go-programming-language/"
 package main
 
 import (
@@ -44,11 +43,11 @@ func (manager *ClientManager) start() {
 func receive(conn *net.Conn, manager *ClientManager){
         for{
                 message := make([]byte, 4096)
-		            length, err := (*conn).Read(message)
+		length, err := (*conn).Read(message)
                 if err != nil{
                         manager.unregister <- conn
-			                  (*conn).Close()
-			                   break
+			(*conn).Close()
+			break
                 }
                 if length > 0 {
                         fmt.Println("RECEIVED:" + string(message))
